@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Herramientas OSINT</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/OOjs_UI_icon_search-ltr.svg/120px-OOjs_UI_icon_search-ltr.svg.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --text: #222;
+      --card-bg: #fff;
+      --accent: #007acc;
+    }
+    [data-theme="dark"] {
+      --bg: #1e1e1e;
+      --text: #f4f4f4;
+      --card-bg: #2a2a2a;
+      --accent: #66b2ff;
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+    }
+    .search-box {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .toggle-theme {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .card ul {
+      padding-left: 1rem;
+    }
+    .card li {
+      margin-bottom: 0.5rem;
+    }
+    .card a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-theme" onclick="toggleTheme()">🌙 Cambiar tema</button>
+  <header>
+    <h1>🧰 Herramientas OSINT</h1>
+    <p>Filtra y accede a las mejores herramientas de inteligencia de fuentes abiertas.</p>
+  </header>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Buscar herramienta..." onkeyup="filterCards()">
+  </div>
+
+  <div class="container" id="toolsContainer">
+    <div class="card">
+      <h2>🔍 Personas</h2>
+      <ul>
+        <li><a href="https://pipl.com/" target="_blank">Pipl</a></li>
+        <li><a href="https://namechk.com/" target="_blank">Namechk</a></li>
+        <li><a href="https://www.social-searcher.com/" target="_blank">Social Searcher</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>📱 Redes Sociales</h2>
+      <ul>
+        <li><a href="https://www.whopostedwhat.com/" target="_blank">WhoPostedWhat</a></li>
+        <li><a href="https://github.com/twintproject/twint" target="_blank">Twint</a></li>
+        <li><a href="https://instaloader.github.io/" target="_blank">InstaLoader</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>🖼️ Imágenes y Metadatos</h2>
+      <ul>
+        <li><a href="https://tineye.com/" target="_blank">TinEye</a></li>
+        <li><a href="https://exiftool.org/" target="_blank">ExifTool</a></li>
+        <li><a href="https://www.invid-project.eu/tools/invid-verification-plugin/" target="_blank">InVID Plugin</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>🌐 Otros</h2>
+      <ul>
+        <li><a href="https://www.shodan.io/" target="_blank">Shodan</a></li>
+        <li><a href="https://haveibeenpwned.com/" target="_blank">HaveIBeenPwned</a></li>
+        <li><a href="https://intelx.io/" target="_blank">IntelX</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function filterCards() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? 'block' : 'none';
+      });
+    }
+
+    function toggleTheme() {
+      const theme = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
+    }
+  </script>
+</body>
+</html>
