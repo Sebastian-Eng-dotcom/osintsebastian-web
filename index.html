@@ -1,149 +1,183 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Herramientas OSINT</title>
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/OOjs_UI_icon_search-ltr.svg/120px-OOjs_UI_icon_search-ltr.svg.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root {
-      --bg: #f4f4f4;
-      --text: #222;
-      --card-bg: #fff;
-      --accent: #007acc;
-    }
-    [data-theme="dark"] {
-      --bg: #1e1e1e;
-      --text: #f4f4f4;
-      --card-bg: #2a2a2a;
-      --accent: #66b2ff;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tablero OSINT Interactivo</title>
+<style>
+  /* Reset básico */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #eee;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .grid-container {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    padding: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .card:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .card-header {
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .card-content.open {
+    max-height: 1000px; /* suficientemente grande para desplegar */
+  }
+  ul.tools-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  ul.tools-list li {
+    margin-bottom: 8px;
+  }
+  ul.tools-list li a {
+    color: #a8d0ff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  ul.tools-list li a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .toggle-icon {
+    font-weight: 700;
+    font-size: 1.4em;
+    user-select: none;
+    transition: transform 0.3s ease;
+  }
+  .toggle-icon.rotate {
+    transform: rotate(90deg);
+  }
+  @media (max-width: 480px) {
     body {
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 2rem;
+      padding: 10px;
     }
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
+    .card-header {
+      font-size: 1em;
     }
-    h1 {
-      font-size: 2rem;
-      color: var(--accent);
-    }
-    .search-box {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    input[type="text"] {
-      padding: 0.5rem;
-      font-size: 1rem;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .toggle-theme {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--accent);
-    }
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
-      color: var(--accent);
-    }
-    .card ul {
-      padding-left: 1rem;
-    }
-    .card li {
-      margin-bottom: 0.5rem;
-    }
-    .card a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .card a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <button class="toggle-theme" onclick="toggleTheme()">🌙 Cambiar tema</button>
-  <header>
-    <h1>🧰 Herramientas OSINT</h1>
-    <p>Filtra y accede a las mejores herramientas de inteligencia de fuentes abiertas.</p>
-  </header>
 
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Buscar herramienta..." onkeyup="filterCards()">
-  </div>
+<h1>Tablero OSINT Interactivo</h1>
 
-  <div class="container" id="toolsContainer">
-    <div class="card">
-      <h2>🔍 Personas</h2>
-      <ul>
-        <li><a href="https://pipl.com/" target="_blank">Pipl</a></li>
-        <li><a href="https://namechk.com/" target="_blank">Namechk</a></li>
-        <li><a href="https://www.social-searcher.com/" target="_blank">Social Searcher</a></li>
-      </ul>
+<div class="grid-container">
+  <div class="card" tabindex="0">
+    <div class="card-header">
+      Fuentes de Datos
+      <span class="toggle-icon">&#9654;</span>
     </div>
-    <div class="card">
-      <h2>📱 Redes Sociales</h2>
-      <ul>
-        <li><a href="https://www.whopostedwhat.com/" target="_blank">WhoPostedWhat</a></li>
-        <li><a href="https://github.com/twintproject/twint" target="_blank">Twint</a></li>
-        <li><a href="https://instaloader.github.io/" target="_blank">InstaLoader</a></li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🖼️ Imágenes y Metadatos</h2>
-      <ul>
-        <li><a href="https://tineye.com/" target="_blank">TinEye</a></li>
-        <li><a href="https://exiftool.org/" target="_blank">ExifTool</a></li>
-        <li><a href="https://www.invid-project.eu/tools/invid-verification-plugin/" target="_blank">InVID Plugin</a></li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🌐 Otros</h2>
-      <ul>
-        <li><a href="https://www.shodan.io/" target="_blank">Shodan</a></li>
-        <li><a href="https://haveibeenpwned.com/" target="_blank">HaveIBeenPwned</a></li>
-        <li><a href="https://intelx.io/" target="_blank">IntelX</a></li>
+    <div class="card-content">
+      <ul class="tools-list">
+        <li><a href="https://www.shodan.io" target="_blank" rel="noopener">Shodan</a></li>
+        <li><a href="https://intelx.io" target="_blank" rel="noopener">IntelX</a></li>
+        <li><a href="https://www.censys.io" target="_blank" rel="noopener">Censys</a></li>
       </ul>
     </div>
   </div>
 
-  <script>
-    function filterCards() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(input) ? 'block' : 'none';
-      });
-    }
+  <div class="card" tabindex="0">
+    <div class="card-header">
+      Análisis de Redes Sociales
+      <span class="toggle-icon">&#9654;</span>
+    </div>
+    <div class="card-content">
+      <ul class="tools-list">
+        <li><a href="https://www.social-searcher.com" target="_blank" rel="noopener">Social Searcher</a></li>
+        <li><a href="https://twint.readthedocs.io" target="_blank" rel="noopener">TWINT</a></li>
+        <li><a href="https://www.maltego.com" target="_blank" rel="noopener">Maltego</a></li>
+      </ul>
+    </div>
+  </div>
 
-    function toggleTheme() {
-      const theme = document.documentElement.getAttribute("data-theme");
-      document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
-    }
-  </script>
+  <div class="card" tabindex="0">
+    <div class="card-header">
+      Geolocalización
+      <span class="toggle-icon">&#9654;</span>
+    </div>
+    <div class="card-content">
+      <ul class="tools-list">
+        <li><a href="https://www.geoiptool.com" target="_blank" rel="noopener">GeoIP Tool</a></li>
+        <li><a href="https://www.opencellid.org" target="_blank" rel="noopener">OpenCellID</a></li>
+        <li><a href="https://www.google.com/maps" target="_blank" rel="noopener">Google Maps</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" tabindex="0">
+    <div class="card-header">
+      Herramientas de Análisis
+      <span class="toggle-icon">&#9654;</span>
+    </div>
+    <div class="card-content">
+      <ul class="tools-list">
+        <li><a href="https://www.exiftool.org" target="_blank" rel="noopener">ExifTool</a></li>
+        <li><a href="https://www.tineye.com" target="_blank" rel="noopener">TinEye</a></li>
+        <li><a href="https://www.hunch.ly" target="_blank" rel="noopener">Hunch.ly</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Seleccionar todas las tarjetas
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    const header = card.querySelector('.card-header');
+    const content = card.querySelector('.card-content');
+    const icon = card.querySelector('.toggle-icon');
+
+    header.addEventListener('click', () => {
+      content.classList.toggle('open');
+      icon.classList.toggle('rotate');
+    });
+
+    // También toggle con teclado (Enter o Espacio)
+    card.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        content.classList.toggle('open');
+        icon.classList.toggle('rotate');
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
